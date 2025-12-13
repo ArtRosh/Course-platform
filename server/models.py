@@ -7,6 +7,8 @@ from config import db
 class Enrollment(db.Model, SerializerMixin):
     __tablename__ = 'enrollments'
 
+    serialize_rules = ("-course.enrollments", "-student.enrollments")
+
     id = db.Column(db.Integer, primary_key=True)
 
     student_id = db.Column(
@@ -32,6 +34,8 @@ class Enrollment(db.Model, SerializerMixin):
 class Instructor(db.Model, SerializerMixin):
     __tablename__ = 'instructors'
 
+    serialize_rules = ("-courses.instructor",)
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     email = db.Column(db.String)
@@ -41,6 +45,13 @@ class Instructor(db.Model, SerializerMixin):
 # --- belongs to Instructor, has many Lessons, has many Enrollments  ---
 class Course(db.Model, SerializerMixin):
     __tablename__ = 'courses'
+
+    serialize_rules = (
+        "-instructor.courses",
+        "-lessons.course",
+        "-enrollments.course",
+        "-students"
+        )
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
@@ -74,6 +85,8 @@ class Course(db.Model, SerializerMixin):
 class Lesson(db.Model, SerializerMixin):
     __tablename__ = 'lessons'
 
+    serialize_rules = ("-course.lessons",)
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
     content = db.Column(db.Text)
@@ -89,6 +102,11 @@ class Lesson(db.Model, SerializerMixin):
 # --- has many Enrollments ---
 class Student(db.Model, SerializerMixin):
     __tablename__ = 'students'
+
+    serialize_rules = (
+        "-enrollments.student",
+        "-courses"
+        )
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
