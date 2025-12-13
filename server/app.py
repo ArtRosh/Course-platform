@@ -9,7 +9,7 @@ from flask_restful import Resource
 # Local imports
 from config import app, db, api
 # Model imports
-
+from models import Instructor, Course, Lesson, Student, Enrollment
 
 # Views go here!
 
