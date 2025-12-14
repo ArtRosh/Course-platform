@@ -1,7 +1,9 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.orm import validates
 
 from config import db
+
 
 # --- belongs to Course and belongs to Student ---
 class Enrollment(db.Model, SerializerMixin):
@@ -27,8 +29,20 @@ class Enrollment(db.Model, SerializerMixin):
     status = db.Column(db.String)
 
     course = db.relationship("Course", back_populates="enrollments")
-
     student = db.relationship("Student", back_populates="enrollments")
+
+    @validates("progress")
+    def validate_progress(self, key, value):
+        if value is not None and value < 0:
+            raise ValueError("progress must be 0 or greater")
+        return value
+
+    @validates("status")
+    def validate_status(self, key, value):
+        if value is None or value == "":
+            raise ValueError("status is required")
+        return value
+
 
 # --- has many Courses ---
 class Instructor(db.Model, SerializerMixin):
@@ -42,7 +56,22 @@ class Instructor(db.Model, SerializerMixin):
 
     courses = db.relationship("Course", back_populates="instructor")
 
-# --- belongs to Instructor, has many Lessons, has many Enrollments  ---
+    @validates("name")
+    def validate_name(self, key, value):
+        if value is None or value == "":
+            raise ValueError("name is required")
+        return value
+
+    @validates("email")
+    def validate_email(self, key, value):
+        if value is None or value == "":
+            raise ValueError("email is required")
+        if "@" not in value:
+            raise ValueError("Invalid email")
+        return value
+
+
+# --- belongs to Instructor, has many Lessons, has many Enrollments ---
 class Course(db.Model, SerializerMixin):
     __tablename__ = 'courses'
 
@@ -51,7 +80,7 @@ class Course(db.Model, SerializerMixin):
         "-lessons.course",
         "-enrollments.course",
         "-students"
-        )
+    )
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
@@ -68,18 +97,29 @@ class Course(db.Model, SerializerMixin):
     lessons = db.relationship("Lesson", back_populates="course")
 
     enrollments = db.relationship(
-        "Enrollment", 
+        "Enrollment",
         back_populates="course",
         cascade="all, delete-orphan"
-        )
+    )
 
-    # --- proxy to get students belongs to the course through Enrollment ---
     students = association_proxy(
         "enrollments",
         "student",
-        # --- add new student to the course ---
         creator=lambda student_obj: Enrollment(student=student_obj)
-        )
+    )
+
+    @validates("title")
+    def validate_title(self, key, value):
+        if value is None or value == "":
+            raise ValueError("title is required")
+        return value
+
+    @validates("description")
+    def validate_description(self, key, value):
+        if value is None or value == "":
+            raise ValueError("description is required")
+        return value
+
 
 # --- belongs to Course ---
 class Lesson(db.Model, SerializerMixin):
@@ -99,6 +139,19 @@ class Lesson(db.Model, SerializerMixin):
 
     course = db.relationship("Course", back_populates="lessons")
 
+    @validates("title")
+    def validate_title(self, key, value):
+        if value is None or value == "":
+            raise ValueError("title is required")
+        return value
+
+    @validates("content")
+    def validate_content(self, key, value):
+        if value is None or value == "":
+            raise ValueError("content is required")
+        return value
+
+
 # --- has many Enrollments ---
 class Student(db.Model, SerializerMixin):
     __tablename__ = 'students'
@@ -106,23 +159,34 @@ class Student(db.Model, SerializerMixin):
     serialize_rules = (
         "-enrollments.student",
         "-courses"
-        )
+    )
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     email = db.Column(db.String)
 
     enrollments = db.relationship(
-        "Enrollment", 
+        "Enrollment",
         back_populates="student",
         cascade="all, delete-orphan"
-        )
+    )
 
-    # --- proxy to get courses belongs to the student through Enrollment ---
     courses = association_proxy(
         "enrollments",
         "course",
-        # --- add new course to the student ---
         creator=lambda course_obj: Enrollment(course=course_obj)
     )
 
+    @validates("name")
+    def validate_name(self, key, value):
+        if value is None or value == "":
+            raise ValueError("name is required")
+        return value
+
+    @validates("email")
+    def validate_email(self, key, value):
+        if value is None or value == "":
+            raise ValueError("email is required")
+        if "@" not in value:
+            raise ValueError("Invalid email")
+        return value
