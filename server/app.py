@@ -7,7 +7,7 @@ from config import app, db, api
 from models import Instructor, Course, Lesson, Student, Enrollment
 
 
-# ------ INSTRUCTORS ------
+# ------ INSTRUCTORS -----
 
 class Instructors(Resource):
     def get(self):
