@@ -61,14 +61,13 @@ function EnrollmentEdit() {
       .then(res => res.json())
       .then((data) => {
         console.log(data)
-        // console.log(values)
 
         const adjustCourse = {...course, enrollments: course.enrollments.map(e => e.id === data.id ? data : e)}
-        // console.log(adjustCourse)
+       
         const adjustCourses = student.courses.map(c => c.id === adjustCourse.id ? adjustCourse : c)
-        // console.log(adjustCourses)
+       
         const adjustStudent = {...student, courses: adjustCourses}
-        // console.log(adjustStudent)
+        
         const adjustStudents = students.map(s => s.id === adjustStudent.id ? adjustStudent : s)
         console.log(adjustStudents)
         setStudents(adjustStudents)
