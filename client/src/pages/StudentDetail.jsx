@@ -9,17 +9,12 @@ function StudentDetail() {
  
   const navigate = useNavigate();
   
-  // iterating through students and find student with id which equal id taken from URL
   const student = students.find((s) => s.id === Number(id));
-  // console.log(student)
-
-  // let fetch data in data context after refresh, 
-  // otherwise it starts read properties of undefined, which cause errors
+  
   if (!student) {
     return <p>Loading...</p>;
   }
-  // console.log(student)
-
+  
   return (
     <div className="container mt-4">
       <button className="btn btn-outline-secondary mb-3" onClick={() => navigate(-1)}>
