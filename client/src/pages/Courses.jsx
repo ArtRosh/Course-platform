@@ -1,4 +1,3 @@
-// client/src/pages/Courses.jsx
 import { Link } from "react-router-dom";
 import { useData } from "../context/DataContext";
 
