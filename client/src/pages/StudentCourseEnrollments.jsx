@@ -17,7 +17,6 @@ function StudentCourseEnrollments() {
   }
   // find course by id taken from URL
   const course = student.courses.find((c) => c.id === Number(courseId));
-  // console.log(course)
 
   if (!course) {
     navigate(-1)
