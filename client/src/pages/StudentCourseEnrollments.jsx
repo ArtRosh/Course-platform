@@ -2,20 +2,19 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { useData } from "../context/DataContext";
 
 function StudentCourseEnrollments() {
-  // taking student and course id's, from URL
+
   const { studentId, courseId } = useParams();
-  // console.log(studentId, courseId)
+ 
   const navigate = useNavigate();
-  // entire data from DataContext
+
   const { students, setStudents } = useData();
-  // find student by id from URL
+  
   const student = students.find((s) => s.id === Number(studentId));
-  // console.log(student)
-  // let fetch student before read property of it
+  
   if (!student) {
     return <p>Loading...</p>
   }
-  // find course by id taken from URL
+  
   const course = student.courses.find((c) => c.id === Number(courseId));
 
   if (!course) {
