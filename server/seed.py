@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from random import randint, choice
+
 from faker import Faker
 
 from config import app, db
@@ -50,6 +51,18 @@ COURSE_CATALOG = [
     {
         "title": "TypeScript Essentials",
         "description": "Add types to JavaScript for safer code. Focus on types, interfaces, generics basics, and typing API data in frontend projects.",
+    },
+    {
+        "title": "Python Fundamentals",
+        "description": "Core Python concepts: variables, data types, control flow, functions, and OOP basics. Build CLI tools and scripts.",
+    },
+    {
+        "title": "Data Structures and Algorithms",
+        "description": "Arrays, linked lists, trees, graphs, and common algorithms. Practice problem-solving and Big O analysis.",
+    },
+    {
+        "title": "Authentication and Authorization",
+        "description": "Implement secure login flows, sessions, JWT tokens, and role-based access control in web applications.",
     },
 ]
 
