@@ -2,16 +2,12 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { useData } from "../context/DataContext";
 
 function StudentDetail() {
-  // all students from DataContext
-  const { students } = useData();
-  // console.log(students)
-
-  // taking id from URL
-  const { id } = useParams();
-  // console.log(id)
-  const navigate = useNavigate();
-
   
+  const { students } = useData();
+ 
+  const { id } = useParams();
+ 
+  const navigate = useNavigate();
   
   // iterating through students and find student with id which equal id taken from URL
   const student = students.find((s) => s.id === Number(id));
