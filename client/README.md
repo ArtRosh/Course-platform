@@ -89,39 +89,5 @@ Nested state updates follow a repeatable pattern:
 
 Skipping any step results in broken state or missing re-renders.
 
----
-
-## Validation Strategy
-Validation is enforced on both sides.
-
-Backend:
-- Required fields
-- Correct data types
-- Valid foreign key relationships
-
-Frontend:
-- Input validation for user experience
-- Data normalization before requests
-- State updates only after successful server responses
-
-Backend validation protects system integrity, while frontend validation improves usability.
-
----
-
-## Key Learnings
-- Backend data models directly define frontend complexity
-- Frontend state must match backend responses exactly
-- Relational data requires structured, repeatable update patterns
-- Immutability is mandatory for reliable React state updates
-- Full-stack development is about managing data flow, not screens
 
 
-
-## Project Purpose
-This project was built to demonstrate practical full-stack skills:
-- Designing relational data models
-- Managing nested frontend state
-- Handling partial backend responses
-- Maintaining correctness across frontend and backend boundaries
-
-It reflects patterns commonly used in real production applications rather than simplified academic examples.
