@@ -1,121 +1,93 @@
-# School (Flask + React)
+# Student Enrollment Management System
 
 ## Overview
-School is a small full-stack app for managing instructors, courses, lessons, and student enrollments.
-The project uses a Flask API + SQLAlchemy on the backend and a React UI on the frontend.
+This is a full-stack web application built as a final project that demonstrates how frontend and backend work together as a single, consistent system.  
+The application focuses on managing students, courses, and enrollments, with an emphasis on relational data, controlled state updates, and data integrity across the stack.
 
-## Data Model
-Entities:
-- **Instructor**: `id`, `name`, `email`
-- **Course**: `id`, `title`, `description`, `instructor_id`
-- **Lesson**: `id`, `title`, `content`, `course_id`
-- **Student**: `id`, `name`, `email`
-- **Enrollment**: `id`, `student_id`, `course_id`, `progress`, `status`
+The project reflects real-world full-stack behavior: the backend defines the data structure and guarantees correctness, while the frontend explicitly manages state updates based on backend responses.
 
-Relationships:
-- Instructor **has many** Courses
-- Course **belongs to** Instructor
-- Course **has many** Lessons
-- Lesson **belongs to** Course
-- Student **has many** Enrollments
-- Course **has many** Enrollments
-- Student **many-to-many** Course **through** Enrollment
 
-![Database schema](schema.png)
+---
 
-## Features
-- View lists and details for:
-  - Instructors
-  - Courses
-  - Lessons
-  - Students
-- Enroll a student into a course by creating an **Enrollment** (with `status` and `progress`)
-- **Full CRUD is implemented for Students only**:
-  - Create student
-  - Read student(s)
-  - Update student
-  - Delete student
+## Running the Project Locally
 
-## API
-Base URL: `http://localhost:<backend-port>`
-
-### Instructors
-- GET `/instructors`
-- GET `/instructors/<int:id>`
-- POST `/instructors`
-- PATCH `/instructors/<int:id>` (may exist even if UI doesn’t use it)
-- DELETE `/instructors/<int:id>` (may exist even if UI doesn’t use it)
-
-### Courses
-- GET `/courses`
-- GET `/courses/<int:id>`
-- POST `/courses`
-- PATCH `/courses/<int:id>` (may exist even if UI doesn’t use it)
-- DELETE `/courses/<int:id>` (may exist even if UI doesn’t use it)
-
-### Lessons
-- GET `/lessons`
-- GET `/lessons/<int:id>` (if implemented)
-- POST `/lessons` (if implemented)
-- PATCH `/lessons/<int:id>` (if implemented)
-- DELETE `/lessons/<int:id>` (if implemented)
-
-### Students (CRUD)
-- GET `/students`
-- GET `/students/<int:id>`
-- POST `/students`
-- PATCH `/students/<int:id>`
-- DELETE `/students/<int:id>`
-
-### Enrollments
-- GET `/enrollments` 
-- POST `/enrollments` (used to enroll a student into a course)
-
-## Frontend Pages
-Navigation:
-- Instructors
-- Courses
-- Students
-- Lessons
-
-Students:
-- Students list
-- Student detail
-- Student create
-- Student edit
-- Student delete
-
-## Tech Stack
 Backend:
-- Python
-- Flask
-- Flask-RESTful 
-- SQLAlchemy
-- SQLite 
+pipenv install  
+pipenv shell  
+flask db upgrade  
+python app.py  
 
 Frontend:
+npm install  
+npm start  
+
+---
+
+## Core Features
+- View a list of students
+- View courses associated with a student
+- View enrollments associated with a course
+- Create new enrollments
+- Update frontend state without refetching the entire dataset
+- Maintain consistent nested state across multiple relationship levels
+
+---
+
+## Data Model
+The application is built around three core entities:
+- Student
+- Course
+- Enrollment
+
+### Relationships
+- A student has many enrollments
+- A course has many enrollments
+- An enrollment belongs to one student and one course
+
+These relationships are enforced at the database and model level and mirrored exactly on the frontend.
+
+---
+
+## Backend
+Tech stack:
+- Python
+- Flask
+- SQLAlchemy
+- SQLite (development)
+
+Responsibilities:
+- Define relational data models
+- Enforce data integrity through validations
+- Handle foreign key constraints
+- Return minimal, explicit responses for each request
+
+Creating a new enrollment returns only the created object, not a full updated dataset. This design forces the frontend to manage state updates explicitly.
+
+---
+
+## Frontend
+Tech stack:
 - React
-- React Router
-- Formik + Yup
-- Bootstrap classes (based on UI)
+- JavaScript
+- HTML
+- CSS
 
-## Getting Started
+State structure mirrors backend relationships:
+students → courses → enrollments
 
-### Backend
-1. Create and activate your virtual environment
-2. Install dependencies
-3. Run migrations (if your project uses them)
-4. Start the server
+Key concepts:
+- Bottom-up state updates
+- Strict immutability
+- Explicit merging of backend responses into existing state
+- Defensive handling of missing or not-yet-loaded data
 
-Notes:
-- If you use seed data, run your seed script before using the UI.
+Nested state updates follow a repeatable pattern:
+1. Update enrollments for a specific course
+2. Replace that course inside the student
+3. Replace the student inside the students array
+4. Update top-level state
 
-### Frontend
-1. `cd client`
-2. Install dependencies
-3. Start React dev server
-4. Open `http://localhost:3000`
+Skipping any step results in broken state or missing re-renders.
 
-## Notes
-- The UI is designed so newly created records should appear immediately without a full page reload by updating React state after successful POST requests.
-- Some PATCH/DELETE endpoints may exist in the API even if the current UI does not use them.
+
+
