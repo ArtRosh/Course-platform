@@ -1,70 +1,127 @@
-# Getting Started with Create React App
+# Student Enrollment Management System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
+This is a full-stack web application built as a final project that demonstrates how frontend and backend work together as a single, consistent system.  
+The application focuses on managing students, courses, and enrollments, with an emphasis on relational data, controlled state updates, and data integrity across the stack.
 
-## Available Scripts
+The project reflects real-world full-stack behavior: the backend defines the data structure and guarantees correctness, while the frontend explicitly manages state updates based on backend responses.
 
-In the project directory, you can run:
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Running the Project Locally
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Backend:
+pipenv install  
+pipenv shell  
+flask db upgrade  
+python app.py  
 
-### `npm test`
+Frontend:
+npm install  
+npm start  
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## Core Features
+- View a list of students
+- View courses associated with a student
+- View enrollments associated with a course
+- Create new enrollments
+- Update frontend state without refetching the entire dataset
+- Maintain consistent nested state across multiple relationship levels
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Data Model
+The application is built around three core entities:
+- Student
+- Course
+- Enrollment
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Relationships
+- A student has many enrollments
+- A course has many enrollments
+- An enrollment belongs to one student and one course
 
-### `npm run eject`
+These relationships are enforced at the database and model level and mirrored exactly on the frontend.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+---
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Backend
+Tech stack:
+- Python
+- Flask
+- SQLAlchemy
+- SQLite (development)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Responsibilities:
+- Define relational data models
+- Enforce data integrity through validations
+- Handle foreign key constraints
+- Return minimal, explicit responses for each request
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Creating a new enrollment returns only the created object, not a full updated dataset. This design forces the frontend to manage state updates explicitly.
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Frontend
+Tech stack:
+- React
+- JavaScript
+- HTML
+- CSS
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+State structure mirrors backend relationships:
+students → courses → enrollments
 
-### Code Splitting
+Key concepts:
+- Bottom-up state updates
+- Strict immutability
+- Explicit merging of backend responses into existing state
+- Defensive handling of missing or not-yet-loaded data
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Nested state updates follow a repeatable pattern:
+1. Update enrollments for a specific course
+2. Replace that course inside the student
+3. Replace the student inside the students array
+4. Update top-level state
 
-### Analyzing the Bundle Size
+Skipping any step results in broken state or missing re-renders.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## Validation Strategy
+Validation is enforced on both sides.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Backend:
+- Required fields
+- Correct data types
+- Valid foreign key relationships
 
-### Advanced Configuration
+Frontend:
+- Input validation for user experience
+- Data normalization before requests
+- State updates only after successful server responses
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Backend validation protects system integrity, while frontend validation improves usability.
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Key Learnings
+- Backend data models directly define frontend complexity
+- Frontend state must match backend responses exactly
+- Relational data requires structured, repeatable update patterns
+- Immutability is mandatory for reliable React state updates
+- Full-stack development is about managing data flow, not screens
 
-### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Project Purpose
+This project was built to demonstrate practical full-stack skills:
+- Designing relational data models
+- Managing nested frontend state
+- Handling partial backend responses
+- Maintaining correctness across frontend and backend boundaries
+
+It reflects patterns commonly used in real production applications rather than simplified academic examples.
