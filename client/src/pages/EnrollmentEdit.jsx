@@ -14,37 +14,10 @@ function EnrollmentEdit() {
   const { courses, students, setStudents } = useData();
 
   const student = students.find(s => s.id === parseInt(student_id))
-  // if (student) {
-    
-  // }
+  
   const course = student.courses.find(c => c.id === parseInt(course_id))
 
   const enrollment = course.enrollments.find(e => e.id === parseInt(id))
-  
-  // let enrollment = null
-  
-  // let course = null
-  
-  // let student = null
-  
-
-  // for (const s of students) {
-  //   for (const c of s.courses) {
-  //     for (const e of c.enrollments) {
-  //       if (e.id === enrollmentId) {
-  //         enrollment = e
-  //         course = c
-  //         student = s
-  //         break
-  //       }
-  //     }
-  //     if (enrollment) break
-  //   }
-  //   if (enrollment) break
-  // }
-  // console.log(enrollment)
-  // console.log(course)
-  // console.log(student)
 
   const formSchema = yup.object().shape({
     course_id: yup.string().required("Course is required"),
@@ -100,7 +73,7 @@ function EnrollmentEdit() {
         console.log(adjustStudents)
         setStudents(adjustStudents)
 
-          navigate(-1);
+        navigate(-1);
         
       });
     },
