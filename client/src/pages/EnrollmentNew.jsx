@@ -51,7 +51,7 @@ function EnrollmentNew() {
           const course = student.courses.find(c => c.id === Number(values.course_id))
 
           if (!course) {
-            
+
             const course = courses.find(c => c.id === data.course_id)
 
             const adjustStudent = {...student, courses: [{...course, enrollments: [{...data}]}]}
@@ -63,13 +63,7 @@ function EnrollmentNew() {
           
           } else {
 
-            const existCourse = course.enrollments.some(e => e.id === data.id)
-
-            const adjustEnrollments = existCourse
-            ? course.enrollments
-            : [...course.enrollments, data]
-
-            const adjustCourse = {...course, enrollments: adjustEnrollments}
+            const adjustCourse = {...course, enrollments: [...course.enrollments, data]}
 
             const adjustedCourses = student.courses.map(c => c.id === adjustCourse.id ? adjustCourse : c)
 
