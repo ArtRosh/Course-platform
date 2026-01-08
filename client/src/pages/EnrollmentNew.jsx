@@ -33,7 +33,6 @@ function EnrollmentNew() {
     },
     validationSchema: formSchema,
     onSubmit: (values) => {
-      
       fetch("/enrollments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -46,46 +45,41 @@ function EnrollmentNew() {
       }).then((res) => res.json())
         .then((data) => {
           console.log(data)
-          console.log(values)
 
           const student = students.find(s => s.id === data.student_id)
 
           const course = student.courses.find(c => c.id === Number(values.course_id))
+
           if (!course) {
+            
             const course = courses.find(c => c.id === data.course_id)
+
             const adjustStudent = {...student, courses: [{...course, enrollments: [{...data}]}]}
             
-          const adjustedStudents = students.map(s =>
-            s.id === adjustStudent.id ? adjustStudent : s
+            const adjustedStudents = students.map(s =>
+              s.id === adjustStudent.id ? adjustStudent : s
           )
-          
           setStudents(adjustedStudents)
           
           } else {
 
-          console.log(course)
+            const existCourse = course.enrollments.some(e => e.id === data.id)
 
-          const existCourse = course.enrollments.some(e => e.id === data.id)
+            const adjustEnrollments = existCourse
+            ? course.enrollments
+            : [...course.enrollments, data]
 
-          const adjustEnrollments = existCourse
-          ? course.enrollments
-          : [...course.enrollments, data]
+            const adjustCourse = {...course, enrollments: adjustEnrollments}
 
-          const adjustCourse = {...course, enrollments: adjustEnrollments}
+            const adjustedCourses = student.courses.map(c => c.id === adjustCourse.id ? adjustCourse : c)
 
-          const adjustedCourses = student.courses.map(c => c.id === adjustCourse.id ? adjustCourse : c)
+            const adjustStudent = {...student, courses: adjustedCourses}
 
-          const adjustStudent = {...student, courses: adjustedCourses}
-
-          const adjustedStudents = students.map(s =>
-            s.id === adjustStudent.id ? adjustStudent : s
-          )
-          
+            const adjustedStudents = students.map(s =>
+              s.id === adjustStudent.id ? adjustStudent : s
+            )
           setStudents(adjustedStudents)
           }
-
-      
-          
 
           navigate(
             `/students/${values.student_id}/courses/${values.course_id}/enrollments`
