@@ -1,4 +1,3 @@
-// client/src/pages/EnrollmentEdit.jsx
 import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
